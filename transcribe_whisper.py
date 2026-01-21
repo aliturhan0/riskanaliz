@@ -19,6 +19,11 @@ _global_model = None
 def get_model():
     """Modeli sadece bir kez yükle ve döndür"""
     global _global_model
+    
+    # Whisper kütüphanesi yüklü mü kontrol et
+    if whisper is None:
+        raise ImportError("openai-whisper kütüphanesi bulunamadı! Lütfen 'pip install openai-whisper' komutunu çalıştırın.")
+
     if _global_model is None:
         # SSL sertifika hatası için fix
         try:
