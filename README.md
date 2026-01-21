@@ -18,7 +18,7 @@
 
 ## 🛠️ Gereksinimler
 
-- **Python 3.11.9** (Önerilen Sürüm)
+- **Python 3.10** (Önerilen Sürüm)
 - **FFmpeg** (Ses işleme için zorunlu)
 - **Git**
 
