@@ -77,6 +77,8 @@ Venv aktifken:
 python desktop_app.py
 ```
 
+> **⚠️ ÖNEMLİ:** Program tarayıcıyı açtığında TikTok **Captcha (Puzzle)** sorabilir. Bunu tarayıcı penceresinden **manuel olarak çözmeniz** gerekir. Program siz doğrulamayı geçene kadar bekleyecektir.
+
 ## ⚠️ Mac Özel Uyarılar
 
 - **Tkinter Hatası:** Eğer arayüz açılmazsa veya siyah ekran verirse, `python-tk` kütüphanesini brew ile yüklemeniz gerekebilir: `brew install python-tk`

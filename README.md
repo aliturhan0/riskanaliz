@@ -43,7 +43,8 @@
 1. **Mod Seçin:** Hashtag (`#risk`) veya Kullanıcı (`@username`)
 2. **Limit:** Kaç video taranacağını belirleyin (örn: 5)
 3. **Başlat:** "Analizi Başlat" butonuna basın.
-4. **İzle:** Uygulama TikTok'a bağlanır, videoları indirir ve analiz eder.
+4. **İzle:** Uygulama TikTok'a bağlanır.
+    > ⚠️ **Not:** İlk açılışta Captcha/Puzzle çıkarsa tarayıcıdan manuel olarak çözün. Program bunu algılayıp devam edecektir.
 5. **Sonuç:** `data/csv` klasöründe detaylı CSV dosyası ve analiz raporu oluşur.
 6. **Yapay Zeka Yorumu:** Oluşan CSV dosyasını seçip **"🚀 NotebookLM"** butonuna basın. Otomatik oluşturulan prompt ile analiz raporunuzu yapay zekaya yorumlatın.
 

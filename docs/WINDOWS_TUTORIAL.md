@@ -83,6 +83,8 @@ Her şey hazır! Uygulamayı başlatmak için:
 python desktop_app.py
 ```
 
+> **⚠️ ÖNEMLİ:** Program tarayıcıyı açtığında TikTok **Captcha (Puzzle)** sorabilir. Bunu tarayıcı penceresinden **manuel olarak çözmeniz** gerekir. Program siz doğrulamayı geçene kadar bekleyecektir.
+
 ## ❓ Sık Karşılaşılan Sorunlar
 
 **Soru:** `ModuleNotFoundError: No module named ...` hatası alıyorum.
