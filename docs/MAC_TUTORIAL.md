@@ -26,6 +26,19 @@ git clone https://github.com/aliturhan0/riskanaliz.git
 cd riskanaliz
 ```
 
+## 🚨 ÖNEMLİ ADIM: Model Dosyaları
+
+Bu proje Yapay Zeka modeli kullanmaktadır. GitHub'a sığmadığı için aşağıdaki **İKİ KLASÖRÜ** manuel indirmeniz ZORUNLUDUR:
+
+1.  **[BERT MODEL KLASÖRÜ (my_suicide_bert_model)](https://drive.google.com/drive/folders/1O_jxgsG20H2PmKCbjTmgH8Cjzh7VUdtB?usp=share_link)**
+2.  **[PYCACHE KLASÖRÜ (__pycache__)](https://drive.google.com/drive/folders/1fpdCmBWxDt6mOuLYco7O0am_jAyHP8Ux?usp=share_link)**
+
+**Yapılacaklar:**
+1.  Linklerden dosyaları indirin.
+2.  `riskanaliz` klasörünün içine sürükleyip bırakın.
+
+👉 *Modelin eğitim kodlarını incelemek isterseniz: [Google Colab Linki](https://colab.research.google.com/drive/1fmDmyv6W7ezXBNjFa6U5CdSQKV5nhgwu?usp=share_link)*
+
 ## 3. Kurulum
 
 1.  **Sanal Ortam Oluşturma:**

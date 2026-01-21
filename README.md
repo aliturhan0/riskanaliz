@@ -24,6 +24,17 @@
 
 ## 📚 Kurulum ve Kullanım Rehberi
 
+> [!IMPORTANT]
+> **🚨 ÇOK ÖNEMLİ - İLK ADIM:**
+> Uygulamanın çalışması için **2 zorunlu klasörü** indirip proje ana dizinine atmanız gerekmektedir:
+> 
+> 1. 📂 **[BERT MODEL KLASÖRÜNÜ İNDİR](https://drive.google.com/drive/folders/1O_jxgsG20H2PmKCbjTmgH8Cjzh7VUdtB?usp=share_link)** (`my_suicide_bert_model` klasörü)
+> 2. 📂 **[PYCACHE KLASÖRÜNÜ İNDİR](https://drive.google.com/drive/folders/1fpdCmBWxDt6mOuLYco7O0am_jAyHP8Ux?usp=share_link)** (`__pycache__` klasörü)
+> 
+> *Bu klasörleri indirdikten sonra proje klasörünün içine sürükleyip bırakın.*
+>
+> ℹ️ **Meraklısı İçin:** Bu modelin nasıl eğitildiğini incelemek isterseniz [Google Colab Notebook](https://colab.research.google.com/drive/1fmDmyv6W7ezXBNjFa6U5CdSQKV5nhgwu?usp=share_link) sayfasını ziyaret edebilirsiniz.
+
 İşletim sisteminize uygun rehberi seçin:
 
 ### 👉 [WINDOWS Kurulum Rehberi](docs/WINDOWS_TUTORIAL.md)
