@@ -45,6 +45,7 @@
 3. **Başlat:** "Analizi Başlat" butonuna basın.
 4. **İzle:** Uygulama TikTok'a bağlanır, videoları indirir ve analiz eder.
 5. **Sonuç:** `data/csv` klasöründe detaylı CSV dosyası ve analiz raporu oluşur.
+6. **Yapay Zeka Yorumu:** Oluşan CSV dosyasını seçip **"🚀 NotebookLM"** butonuna basın. Otomatik oluşturulan prompt ile analiz raporunuzu yapay zekaya yorumlatın.
 
 ---
 **Sorumluluk Reddi:** Bu araç sadece eğitim ve araştırma amaçlıdır. TikTok'un kullanım koşullarına uyunuz.
