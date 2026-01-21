@@ -20,6 +20,9 @@ import torch
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
+# Whisper Modülü (Optimize Edilmiş)
+import transcribe_whisper
+
 MODEL_DIR_NAME = "my_suicide_bert_model"  # proje klasöründe bu isimle durmalı
 
 _tokenizer = None
@@ -33,12 +36,23 @@ def _load_risk_model(script_dir: str):
         return
 
     model_dir = os.path.join(script_dir, MODEL_DIR_NAME)
+    try:
+        # BERT Modelini Yükle
+        _device = "cuda" if torch.cuda.is_available() else "cpu"
+        _tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+        _model = AutoModelForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
+        _model.to(_device)
+        _model.eval()
 
-    _device = "cuda" if torch.cuda.is_available() else "cpu"
-    _tokenizer = AutoTokenizer.from_pretrained(model_dir)
-    _model = AutoModelForSequenceClassification.from_pretrained(model_dir)
-    _model.to(_device)
-    _model.eval()
+        # Whisper Modelini Yükle (Hafızada Hazır Beklet)
+        print("🎙️ Whisper AI modeli yükleniyor...")
+        transcribe_whisper.get_model()  # Global değişkeni doldurur
+        
+    except Exception as e:
+        print(f"Error loading models: {e}")
+        # Depending on desired behavior, you might want to re-raise the exception
+        # or handle it more gracefully, e.g., by setting _model to None and returning.
+        raise # Re-raise the exception to indicate failure to load models
 
     # Risk sınıfının hangi index olduğu (modeline göre değişebilir)
     # En güvenlisi label2id/id2label'dan bakmak:
@@ -291,27 +305,21 @@ def download_video(url, out):
     return None
 
 # ======================================================
-# TRANSCRIPT (WHISPER – AYRI SCRIPT)
+# TRANSCRIPT (WHISPER – OPTİMİZE EDİLMİŞ)
 # ======================================================
 def extract_transcript(video_path, script_dir):
     if not video_path:
         return ""
-
-    out_txt = os.path.join(script_dir, f"_tr_{uuid.uuid4().hex}.txt")
-
-    subprocess.run(
-        ["python", "transcribe_whisper.py", video_path, out_txt],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
-
-    if os.path.exists(out_txt):
-        with open(out_txt, "r", encoding="utf-8") as f:
-            txt = f.read()
-        os.remove(out_txt)
+    
+    # Doğrudan Python fonksiyonu çağır (Subprocess yok -> Hız x10)
+    try:
+        # Modeli al (zaten yüklenmiş olmalı)
+        model = transcribe_whisper.get_model()
+        txt = transcribe_whisper.transcribe_audio(video_path, model=model)
         return temizle(txt)
-
-    return ""
+    except Exception as e:
+        print(f"Transcript hatası: {e}")
+        return ""
 
 # ======================================================
 # CAPTION AL
