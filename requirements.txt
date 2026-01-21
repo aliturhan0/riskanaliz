@@ -1,0 +1,11 @@
+requests
+pandas
+opencv-python
+easyocr
+playwright
+torch
+transformers
+openai-whisper
+ffmpeg-python
+certifi
+tk
