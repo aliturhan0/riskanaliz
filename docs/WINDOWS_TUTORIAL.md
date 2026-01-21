@@ -27,6 +27,16 @@ git clone https://github.com/aliturhan0/riskanaliz.git
 cd riskanaliz
 ```
 
+## 🚨 ÖNEMLİ ADIM: Model Dosyası
+
+Bu proje Yapay Zeka modeli kullanmaktadır. GitHub'a sığmadığı için manuel indirmeniz gerekir:
+
+1.  **[MODELİ İNDİRMEK İÇİN TIKLAYIN](LİNK_BURAYA_GELECEK)**
+2.  İndirdiğiniz zip dosyasını açın.
+3.  İçinden çıkan `my_suicide_bert_model` klasörünü, az önce indirdiğiniz `riskanaliz` klasörünün içine sürükleyip bırakın.
+
+**(Klasör yapısı şöyle olmalı: `riskanaliz/my_suicide_bert_model/users...` gibi)**
+
 ## 3. Kurulum (Otomatik)
 
 Terminalde şu komutları sırasıyla çalıştırın:
