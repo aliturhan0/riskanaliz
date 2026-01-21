@@ -12,6 +12,12 @@ venv311/
 # Model files (çok büyükse)
 my_suicide_bert_model/
 
-# CSV outputs
+# CSV outputs - Ana dizin
 tiktok_raw_data.csv
 tiktok_analyzed.csv
+
+# Data klasörü çıktıları
+data/csv/*.csv
+data/notebooklm_txt/*.txt
+*.mp4
+*.wav

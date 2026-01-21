@@ -64,7 +64,6 @@ def _load_risk_model(script_dir: str):
     # Hiç bulamazsa: ikili sınıflandırmada genelde pozitif sınıf index=1 varsay
     _risk_index = int(found) if found is not None else 1
 
-import re
 
 def _is_meaningful_text(text: str) -> bool:
     """
@@ -338,23 +337,34 @@ def get_caption(page):
 # TEK VİDEO İŞLE (HAM)
 # ======================================================
 def process_video(page, source_type, source_value, url, script_dir):
+    print(f"  📥 Video sayfası yükleniyor...")
     page.goto(url, timeout=60000)
     time.sleep(2)
 
+    print(f"  📝 Caption alınıyor...")
     caption_raw = get_caption(page)
 
+    print(f"  ⬇️ Video indiriliyor...")
     video_file = os.path.join(script_dir, f"v_{uuid.uuid4().hex}.mp4")
     video_path = download_video(url, video_file)
 
+    print(f"  🎤 Ses transkripti çıkarılıyor...")
     transcript_raw = extract_transcript(video_path, script_dir)
+    
+    print(f"  🔤 OCR metin taranıyor...")
     overlay_raw = extract_overlay_text(video_path)
 
+    print(f"  👤 Yüz analizi yapılıyor...")
     face_info = extract_face_features(video_path)
+    
+    print(f"  🎨 Görsel analiz yapılıyor...")
     visual_info = extract_visual_features(video_path)
 
     if video_path and os.path.exists(video_path):
         os.remove(video_path)
 
+    print(f"  ✅ Video işlendi!")
+    
     return {
         "source_type": source_type,
         "source_value": source_value,
@@ -476,6 +486,11 @@ def append_csv(csv_path, df):
         print("ℹ️ Yeni veri yok.")
         return
 
+    # Klasör yoksa oluştur
+    csv_dir = os.path.dirname(csv_path)
+    if csv_dir and not os.path.exists(csv_dir):
+        os.makedirs(csv_dir, exist_ok=True)
+
     if os.path.exists(csv_path):
         old_df = pd.read_csv(csv_path)
 
@@ -500,9 +515,6 @@ def append_csv(csv_path, df):
         df.to_csv(csv_path, index=False, encoding="utf-8-sig")
         print(f"🆕 CSV oluşturuldu ({len(df)} satır).")
 
-# ======================================================
-# MAIN
-# ======================================================
 # ======================================================
 # MAIN
 # ======================================================
@@ -531,13 +543,17 @@ if __name__ == "__main__":
     parser.add_argument(
         "--out_csv",
         default="tiktok_analyzed.csv",
-        help="Çıktı CSV dosya adı (varsa üzerine yazılır)",
+        help="Çıktı CSV dosya yolu (tam yol veya dosya adı)",
     )
 
     args = parser.parse_args()
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.join(script_dir, CSV_NAME)
+    
+    # Ham veri CSV yolu (data/csv klasörüne)
+    csv_dir = os.path.join(script_dir, "data", "csv")
+    os.makedirs(csv_dir, exist_ok=True)
+    csv_path = os.path.join(csv_dir, CSV_NAME)
 
     # ---------------- SCRAPE ----------------
     if args.mode == "hashtag":
@@ -559,13 +575,22 @@ if __name__ == "__main__":
         print("⚠️ Veri bulunamadı, işlem sonlandırıldı.")
         exit(0)
 
-    # Ham CSV her zaman append edilir
+    # Ham CSV her zaman append edilir (data/csv klasörüne)
     append_csv(csv_path, df)
     print("✅ HAM VERİ TOPLAMA TAMAMLANDI")
 
     # ---------------- ANALYZE ----------------
     if args.analyze == 1:
-        analyzed_path = os.path.join(script_dir, args.out_csv)
+        # out_csv argümanı tam yol veya sadece dosya adı olabilir
+        analyzed_path = args.out_csv
+        if not os.path.isabs(analyzed_path):
+            # Eğer tam yol değilse, data/csv klasörüne yaz
+            analyzed_path = os.path.join(csv_dir, analyzed_path)
+        
+        # Klasör yoksa oluştur
+        analyzed_dir = os.path.dirname(analyzed_path)
+        if analyzed_dir and not os.path.exists(analyzed_dir):
+            os.makedirs(analyzed_dir, exist_ok=True)
 
         print("🔎 Risk analizi (yalnızca bu çalıştırma) başlıyor...")
         df = add_risk_columns(df, script_dir)
