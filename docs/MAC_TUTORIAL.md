@@ -31,7 +31,7 @@ cd riskanaliz
 Bu proje Yapay Zeka modeli kullanmaktadır. GitHub'a sığmadığı için aşağıdaki **İKİ KLASÖRÜ** manuel indirmeniz ZORUNLUDUR:
 
 1.  **[BERT MODEL KLASÖRÜ (my_suicide_bert_model)](https://drive.google.com/drive/folders/1kuWtry5VCDYuCsKnf2tgX5fSfeoT9TUj)**
-2.  **[PYCACHE KLASÖRÜ (__pycache__)](https://drive.google.com/drive/folders/1fpdCmBWxDt6mOuLYco7O0am_jAyHP8Ux?usp=share_link)**
+2.  **[PYCACHE KLASÖRÜ (__pycache__)](https://drive.google.com/drive/folders/1O_jxgsG20H2PmKCbjTmgH8Cjzh7VUdtB)**
 
 **Yapılacaklar:**
 1.  Linklerden dosyaları indirin.

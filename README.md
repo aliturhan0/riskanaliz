@@ -27,7 +27,7 @@
 > Uygulamanın çalışması için **2 zorunlu klasörü** indirip proje ana dizinine atmanız gerekmektedir:
 > 
 > 1. 📂 **[BERT MODEL KLASÖRÜNÜ İNDİR](https://drive.google.com/drive/folders/1kuWtry5VCDYuCsKnf2tgX5fSfeoT9TUj)** (`my_suicide_bert_model` klasörü)
-> 2. 📂 **[PYCACHE KLASÖRÜNÜ İNDİR](https://drive.google.com/drive/folders/1fpdCmBWxDt6mOuLYco7O0am_jAyHP8Ux?usp=share_link)** (`__pycache__` klasörü)
+> 2. 📂 **[PYCACHE KLASÖRÜNÜ İNDİR](https://drive.google.com/drive/folders/1O_jxgsG20H2PmKCbjTmgH8Cjzh7VUdtB)** (`__pycache__` klasörü)
 > 
 > *Bu klasörleri indirdikten sonra proje klasörünün içine sürükleyip bırakın.*
 >
