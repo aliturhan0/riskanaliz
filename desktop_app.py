@@ -671,18 +671,18 @@ Veri setindeki her bir video için 100 üzerinden bir "Tehlike Puanı" belirle.
 Lütfen analizi şu başlıklar altında, okunabilir ve profesyonel bir dille sun:
 
 ---
-GENEL DURUM RAPORU
+📊 GENEL DURUM RAPORU
 [Genel risk seviyesi ve tespit edilen ana tehditlerin özeti]
 
-KRİTİK VİDEOLAR ANALİZİ (En Yüksek Riskli 5-10 Video)
+🔴 KRİTİK VİDEOLAR ANALİZİ (En Yüksek Riskli 5-10 Video)
 1. Video URL: ...
-   Risk Puanı: .../100
-   Tespit: [Buraya yapay zeka yorumunu, videonun neden tehlikeli olduğunu detaylıca yaz]
+   ⚠️ Risk Puanı: .../100
+   🧐 Tespit: [Buraya yapay zeka yorumunu, videonun neden tehlikeli olduğunu detaylıca yaz]
 
-DAVRANIŞSAL VE İÇERİK TRENDLERİ
+📈 DAVRANIŞSAL VE İÇERİK TRENDLERİ
 [Veri setindeki ortak zararlı şablonlar, anahtar kelimeler ve görsel tercihler üzerine derinlemesine yorum]
 
-ÖNERİLEN AKSİYONLAR
+💡 ÖNERİLEN AKSİYONLAR
 [İçeriklerin kaldırılması, hesapların incelenmesi veya psikolojik destek yönlendirmesi gibi somut öneriler]
 ---
 """
