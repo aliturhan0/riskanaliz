@@ -21,7 +21,13 @@ import numpy as np
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # Whisper Modülü (Optimize Edilmiş)
-import transcribe_whisper
+try:
+    import transcribe_whisper
+except ImportError:
+    print("\n❌ [HATA]: 'openai-whisper' kütüphanesi eksik!")
+    print("👉 Lütfen şu komutu çalıştırın: pip install openai-whisper\n")
+    # Kritik hata olduğu için devam etme
+    raise ImportError("Lütfen 'openai-whisper' kütüphanesini yükleyin.")
 
 MODEL_DIR_NAME = "my_suicide_bert_model"  # proje klasöründe bu isimle durmalı
 

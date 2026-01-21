@@ -7,7 +7,11 @@ import certifi
 # SSL sertifika yolu (Mac'te model indirme sorunlarını azaltır)
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
-import whisper
+try:
+    import whisper
+except ImportError:
+    # Bu dosya import edildiğinde hata vermesin, çağıran yer (tiktok_scraper) yakalasın
+    whisper = None
 
 # Global model değişkeni (modül içinde tutmak için)
 _global_model = None
