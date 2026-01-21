@@ -34,11 +34,30 @@ def _load_risk_model(script_dir: str):
 
     model_dir = os.path.join(script_dir, MODEL_DIR_NAME)
 
-    _device = "cuda" if torch.cuda.is_available() else "cpu"
-    _tokenizer = AutoTokenizer.from_pretrained(model_dir)
-    _model = AutoModelForSequenceClassification.from_pretrained(model_dir)
-    _model.to(_device)
-    _model.eval()
+    # KLASÖR KONTROLÜ
+    if not os.path.exists(model_dir):
+        print(f"\n❌ [HATA]: AI Model klasörü bulunamadı!")
+        print(f"👉 Beklenen Konum: {model_dir}")
+        print("💡 ÇÖZÜM: Google Drive linkinden 'my_suicide_bert_model' klasörünü indirip proje içine atın.\n")
+        raise FileNotFoundError(f"Model directory not found: {model_dir}")
+
+    # CONFIG.JSON KONTROLÜ
+    if not os.path.exists(os.path.join(model_dir, "config.json")):
+        print(f"\n❌ [HATA]: Model dosyaları eksik (config.json yok)!")
+        print(f"👉 Klasör: {model_dir}")
+        print("💡 ÇÖZÜM: İndirdiğiniz model klasörünün içeriğini kontrol edin. İçinde config.json, model.safetensors vb. olmalıdır.\n")
+        raise FileNotFoundError(f"config.json not found in {model_dir}")
+
+    try:
+        _device = "cuda" if torch.cuda.is_available() else "cpu"
+        _tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
+        _model = AutoModelForSequenceClassification.from_pretrained(model_dir, local_files_only=True)
+        _model.to(_device)
+        _model.eval()
+    except Exception as e:
+        print(f"\n❌ [KRİTİK HATA]: Model yüklenirken sorun oluştu: {e}")
+        print("Olası sebepler:\n1. Model dosyaları bozuk inmiş olabilir.\n2. PyTorch sürümü uyumsuz olabilir.\n3. Yanlış klasör seçilmiş olabilir.\n")
+        raise e
 
     # Risk sınıfının hangi index olduğu (modeline göre değişebilir)
     # En güvenlisi label2id/id2label'dan bakmak:
