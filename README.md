@@ -2,8 +2,6 @@
 
 **TikTok Risk Analizörü**, TikTok videolarını hashtag veya kullanıcı bazlı tarayan, indiren, metin/ses/görsel analizi yapan ve **Yapay Zeka (BERT)** ile risk skoru hesaplayan kapsamlı bir araçtır.
 
-![TikTok Risk Analyzer UI](https://via.placeholder.com/800x450?text=App+Screenshot+Here)
-
 ## 🚀 Özellikler
 
 - **🛡️ Risk Analizi:** Videoların açıklama, ses (transkript), görsel ve üzerindeki yazıları (OCR) analiz ederek 0-100 arası risk skoru verir.
@@ -18,7 +16,7 @@
 
 ## 🛠️ Gereksinimler
 
-- **Python 3.10** (Önerilen Sürüm)
+- **Python 3.11.9** (Önerilen Sürüm)
 - **FFmpeg** (Ses işleme için zorunlu)
 - **Git**
 

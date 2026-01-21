@@ -6,7 +6,7 @@ Bu rehber, TikTok Risk Analyzer uygulamasını Windows bilgisayarınızda sıfı
 
 Aşağıdaki programların yüklü olduğundan emin olun. Değilse linklerden indirip kurun ("Add to PATH" seçeneğini işaretlemeyi unutmayın!):
 
-1.  **Python 3.10.11 (Tavsiye Edilen):** [İndir](https://www.geeks3d.com/dl/show/10222)
+1.  **Python 3.11.9 (Tavsiye Edilen):** [İndir](https://www.python.org/downloads/release/python-3119/)
     *   *Kurulum sırasında "Add Python to PATH" kutucuğunu MUTLAKA işaretleyin.*
 2.  **Git:** [İndir](https://git-scm.com/download/win)
 3.  **FFmpeg:**

@@ -14,7 +14,7 @@ Mac'te kurulum yapmanın en kolay yolu **Homebrew** kullanmaktır. Terminali aç
 
 2.  **Gerekli Araçları Yükleyin:**
     ```bash
-    brew install python@3.10 git ffmpeg tesseract
+    brew install python@3.11 git ffmpeg tesseract
     ```
 
 ## 2. Projeyi İndirme (Klonlama)
@@ -43,7 +43,7 @@ Bu proje Yapay Zeka modeli kullanmaktadır. GitHub'a sığmadığı için aşağ
 
 1.  **Sanal Ortam Oluşturma:**
     ```bash
-    python3.10 -m venv venv
+    python3.11 -m venv venv
     ```
 
 2.  **Sanal Ortamı Aktif Etme:**
@@ -65,9 +65,9 @@ Bu proje Yapay Zeka modeli kullanmaktadır. GitHub'a sığmadığı için aşağ
 Mac'te Python bazen SSL sertifika hatası verir. Bunu çözmek için terminalde şunu çalıştırın:
 
 ```bash
-/Applications/Python\ 3.10/Install\ Certificates.command
+/Applications/Python\ 3.11/Install\ Certificates.command
 ```
-*(Eğer dosya yoksa, finder'dan Uygulamalar -> Python 3.10 klasörüne gidip "Install Certificates" dosyasına çift tıklayın)*
+*(Eğer dosya yoksa, finder'dan Uygulamalar -> Python 3.11 klasörüne gidip "Install Certificates" dosyasına çift tıklayın)*
 
 ## 5. Uygulamayı Çalıştırma
 
