@@ -636,96 +636,59 @@ class App(tk.Tk):
     # ======================================================
     def build_notebooklm_prompt(self, csv_path):
         """Profesyonel ve detaylı analiz promptu oluştur"""
-        prompt = """# 🎯 TikTok Risk Analizi - NotebookLM Direktifleri
+        prompt = """Lütfen aşağıdaki direktiflere göre ekteki TikTok veri setini analiz et.
 
-## ROLÜN
-Sen **Sosyal Medya Risk Analisti** olarak görev yapıyorsun. Yüklenen veri setini analiz ederek kapsamlı bir risk değerlendirmesi yapacaksın.
+[ROLÜN]
+Sen uzman bir Sosyal Medya Risk Analisti ve Davranış Bilimcisisin. Sadece sayısal verileri değil, içeriğin alt metnini, potansiyel toplumsal etkilerini ve psikolojik yansımalarını da yorumlamalısın.
 
-## VERİ SETİ AÇIKLAMASI
-Bu CSV dosyası TikTok videolarının analizini içeriyor. Her satır bir videoyu temsil eder.
+[VERİ SETİ HAKKINDA]
+Bu dosya TikTok videolarının ham verilerini ve Yapay Zeka (BERT) tarafından hesaplanan risk skorlarını içerir.
+- caption_risk / transcript_risk / overlay_risk: 0 (Güvenli) ile 1 (Çok Riskli) arasındadır.
+- face_detected: Videoda yüz olup olmadığı.
+- visual_brightness: Videonun karanlık/aydınlık durumu.
 
-### Önemli Kolonlar:
-| Kolon | Açıklama |
-|-------|----------|
-| `video_url` | TikTok video linki |
-| `caption_raw` | Videonun açıklama metni |
-| `transcript_raw` | Ses transkripti (Whisper AI) |
-| `overlay_text_raw` | Videodaki yazılı metinler (OCR) |
-| `caption_risk` | Açıklama metni risk skoru (0-1) |
-| `transcript_risk` | Transkript risk skoru (0-1) |
-| `overlay_risk` | Overlay metin risk skoru (0-1) |
-| `face_detected` | Yüz tespit edildi mi |
-| `visual_brightness` | Görsel parlaklık (düşük = karanlık) |
-| `visual_blur` | Bulanıklık değeri |
+[ANALİZ VE YORUMLAMA GÖREVLERİ]
 
-## ANALİZ GÖREVLERİN
+1. DETAYLI RİSK YORUMLAMASI
+Her videoyu sadece "Riskli/Riskli Değil" diye ayırma. "NEDEN Riskli?" sorusuna odaklan.
+- Videonun transkripti ve açıklamasını birleştirerek, içerikteki gizli tehlikeleri, intihara meyil, depresyon, şiddet veya yasa dışı özendirme gibi nüansları tespit et.
+- Risk skorlarının neden yüksek olduğunu metin içerikleriyle ilişkilendirerek açıkla.
 
-### 1️⃣ Birleşik Risk Skoru Hesapla
-Her video için 0-100 arası **tek bir birleşik risk skoru** hesapla:
-- caption_risk, transcript_risk, overlay_risk değerlerini birleştir
-- Ağırlıklandırma: transcript > caption > overlay
-- Görsel özellikler (düşük brightness, yüz yokluğu) riski artırabilir
+2. BÜTÜNCÜL SKORLAMA
+Veri setindeki her bir video için 100 üzerinden bir "Tehlike Puanı" belirle.
+- 0-30: Güvenli
+- 31-60: Dikkat Edilmeli
+- 61-85: Yüksek Risk
+- 86-100: Kritik/Acil Durum
 
-### 2️⃣ Overall Risk Score
-Tüm veri setini temsil eden **tek bir genel risk skoru** (0-100) ver.
+3. YÖNETİCİ ÖZETİ VE TRENDLER
+- Bu veri setinde genel olarak hangi zararlı temalar öne çıkıyor?
+- Kullanılan dil, müzik veya görsel efektlerde (karanlık ortam vb.) ortak bir depresif/zararlı örüntü var mı?
+- Bu içeriklerin hedef kitle (özellikle gençler) üzerindeki olası psikolojik etkileri neler olabilir?
 
-### 3️⃣ Risk Kategorileri
-| Skor | Kategori | Eylem |
-|------|----------|-------|
-| 0-25 | 🟢 Düşük | İzleme gerekli değil |
-| 26-50 | 🟡 Orta | Takip edilmeli |
-| 51-75 | 🟠 Yüksek | Detaylı inceleme gerekli |
-| 76-100 | 🔴 Kritik | Acil müdahale gerekli |
+[İSTENEN ÇIKTI FORMATI]
 
-### 4️⃣ Çıktı Formatı
+Lütfen analizi şu başlıklar altında, okunabilir ve profesyonel bir dille sun:
 
-```
-═══════════════════════════════════════════════════════════
-📊 GENEL DEĞERLENDİRME
-═══════════════════════════════════════════════════════════
-Overall Risk Score: [X]/100
-Risk Seviyesi: [Düşük/Orta/Yüksek/Kritik]
-Toplam Video: [N]
-Kritik İçerik Sayısı: [N]
+---
+GENEL DURUM RAPORU
+[Genel risk seviyesi ve tespit edilen ana tehditlerin özeti]
 
-═══════════════════════════════════════════════════════════
-📝 YÖNETİCİ ÖZETİ
-═══════════════════════════════════════════════════════════
-[3-5 cümlelik özet - ana bulgular, endişe verici trendler]
+KRİTİK VİDEOLAR ANALİZİ (En Yüksek Riskli 5-10 Video)
+1. Video URL: ...
+   Risk Puanı: .../100
+   Tespit: [Buraya yapay zeka yorumunu, videonun neden tehlikeli olduğunu detaylıca yaz]
 
-═══════════════════════════════════════════════════════════
-🔴 EN RİSKLİ 10 VİDEO
-═══════════════════════════════════════════════════════════
-| # | Risk | Video URL | Neden Riskli |
-|---|------|-----------|--------------|
-| 1 | 95/100 | [link] | [açıklama] |
-| 2 | 88/100 | [link] | [açıklama] |
-...
+DAVRANIŞSAL VE İÇERİK TRENDLERİ
+[Veri setindeki ortak zararlı şablonlar, anahtar kelimeler ve görsel tercihler üzerine derinlemesine yorum]
 
-═══════════════════════════════════════════════════════════
-📈 TREND ANALİZİ
-═══════════════════════════════════════════════════════════
-- En sık görülen riskli kelimeler/temalar
-- Risk dağılımı (kaç video hangi kategoride)
-- Dikkat çeken paternler
-
-═══════════════════════════════════════════════════════════
-💡 ÖNERİLER
-═══════════════════════════════════════════════════════════
-- [Eylem önerisi 1]
-- [Eylem önerisi 2]
-- [Eylem önerisi 3]
-```
-
-## ÖNEMLİ NOTLAR
-- Risk skorları BERT AI modeli tarafından hesaplandı
-- 0'a yakın = güvenli, 1'e yakın = riskli
-- Boş değerler riski belirlemez, göz ardı et
-- Objektif ve profesyonel bir dil kullan
+ÖNERİLEN AKSİYONLAR
+[İçeriklerin kaldırılması, hesapların incelenmesi veya psikolojik destek yönlendirmesi gibi somut öneriler]
+---
 """
         if csv_path:
             import os
-            prompt += f"\n---\n📁 Analiz Edilecek Dosya: **{os.path.basename(csv_path)}**\n"
+            prompt += f"\n(Analiz Edilecek Dosya: {os.path.basename(csv_path)})\n"
         
         return prompt
     
