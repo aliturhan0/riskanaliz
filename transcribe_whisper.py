@@ -17,6 +17,12 @@ except ImportError:
 try:
     import imageio_ffmpeg
     FFMPEG_BIN = imageio_ffmpeg.get_ffmpeg_exe()
+    
+    # KRTİK DÜZELTME: Whisper kütüphanesi de arka planda 'ffmpeg' komutunu çağırır.
+    # Bu yüzden imageio-ffmpeg'in bulduğu ffmpeg klasörünü PATH'e eklemeliyiz.
+    ffmpeg_dir = os.path.dirname(FFMPEG_BIN)
+    os.environ["PATH"] += os.pathsep + ffmpeg_dir
+    
 except ImportError:
     FFMPEG_BIN = "ffmpeg"
 
