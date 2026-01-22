@@ -1,5 +1,9 @@
 # 🕵️‍♂️ TikTok Risk Analyzer & Archiver
 
+**🇬🇧 English Documentation:** [README_EN.md](README_EN.md) | [Windows Guide](docs/WINDOWS_TUTORIAL_EN.md) | [Mac Guide](docs/MAC_TUTORIAL_EN.md)
+
+---
+
 **TikTok Risk Analizörü**, TikTok videolarını hashtag veya kullanıcı bazlı tarayan, indiren, metin/ses/görsel analizi yapan ve **Yapay Zeka (BERT)** ile risk skoru hesaplayan kapsamlı bir araçtır.
 
 ## 🚀 Özellikler
