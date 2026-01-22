@@ -48,6 +48,49 @@ def get_model():
             _global_model = whisper.load_model("small")
     return _global_model
 
+# numpy import et (Whisper'a array vermek için)
+import numpy as np
+
+def load_audio_custom(file_path, sr=16000):
+    """
+    Sesi doğrudan numpy array olarak okur.
+    Whisper'ın kendi load_audio fonksiyonu yerine bunu kullanacağız çünkü
+    Whisper arka planda sistem ffmpeg'ini arıyor ve bulamıyor.
+    """
+    try:
+        print(f"🎤 [CUSTOM LOAD] Ses okunuyor: {file_path}")
+        print(f"🎤 [CUSTOM LOAD] Kullanılan FFMPEG: {FFMPEG_BIN}")
+        
+        cmd = [
+            FFMPEG_BIN,
+            "-nostdin",
+            "-threads", "0",
+            "-i", file_path,
+            "-f", "s16le",
+            "-ac", "1",
+            "-acodec", "pcm_s16le",
+            "-ar", str(sr),
+            "-"
+        ]
+        
+        # Sesi stdout'a yaz
+        # bufsize hatasını önlemek için büyük buffer
+        process = subprocess.run(
+            cmd,
+            capture_output=True,
+            check=True
+        )
+        
+        audio = np.frombuffer(process.stdout, np.int16).flatten().astype(np.float32) / 32768.0
+        print(f"✅ [CUSTOM LOAD] Ses başarıyla numpy array'e çevrildi: {len(audio)} samples")
+        return audio
+        
+    except Exception as e:
+        print(f"❌ [CUSTOM LOAD HATA]: {e}")
+        if hasattr(e, 'stderr'):
+             print(f"⬇️ STDERR:\n{e.stderr.decode('utf-8', errors='ignore')}")
+        raise e
+
 def transcribe_audio(video_path, model=None):
     """
     Video dosyasından sesi çıkarıp metne döker.
@@ -61,7 +104,6 @@ def transcribe_audio(video_path, model=None):
 
         # 1. FFmpeg ile sesi çıkar (WAV)
         print(f"🎬 [FFMPEG] Kullanılan Exe: {FFMPEG_BIN}")
-        print(f"🎬 [FFMPEG] Video Kaynağı: {video_path}")
         
         cmd = [
             FFMPEG_BIN, "-y",
@@ -72,25 +114,23 @@ def transcribe_audio(video_path, model=None):
             wav_path
         ]
         
-        # FFmpeg çalıştır (çıktıyı yakala)
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        
-        if result.returncode != 0:
-            print(f"❌ [FFMPEG HATASI] Return Code: {result.returncode}")
-            print(f"⬇️ STDERR:\n{result.stderr}")
-            return ""
-            
+        # FFmpeg çalıştır
+        subprocess.run(cmd, capture_output=True, check=True)
         print(f"✅ [FFMPEG] Ses ayrıştırıldı: {wav_path}")
 
         # 2. Modeli hazırla
         if model is None:
-            print("⏳ [WHISPER] Model yükleniyor (ilk kez)...")
-            model = get_model() # Bu zaten load_model yapıyor
+            model = get_model()
 
-
-        # 3. Transkript al
-        result = model.transcribe(wav_path, fp16=False)
-        return (result.get("text") or "").strip()
+        # 3. Transkript al (CUSTOM LOAD KULLANARAK)
+        # Whisper'a dosya yolu yerine doğrudan ses verisini (array) veriyoruz
+        print("⏳ [WHISPER] Transkript başlıyor (Custom Loader)...")
+        audio_data = load_audio_custom(wav_path)
+        result = model.transcribe(audio_data, fp16=False)
+        
+        text = (result.get("text") or "").strip()
+        print(f"📝 [SONUÇ] Transkript uzunluğu: {len(text)} karakter")
+        return text
 
     except Exception as e:
         print(f"Transcript hatası: {e}")
