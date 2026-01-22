@@ -13,6 +13,13 @@ except ImportError:
     # Bu dosya import edildiğinde hata vermesin, çağıran yer (tiktok_scraper) yakalasın
     whisper = None
 
+# FFmpeg yolunu belirle (imageio-ffmpeg varsa onu kullan, yoksa sistemdekini)
+try:
+    import imageio_ffmpeg
+    FFMPEG_BIN = imageio_ffmpeg.get_ffmpeg_exe()
+except ImportError:
+    FFMPEG_BIN = "ffmpeg"
+
 # Global model değişkeni (modül içinde tutmak için)
 _global_model = None
 
@@ -43,8 +50,9 @@ def transcribe_audio(video_path, model=None):
     wav_path = f"_audio_{uuid.uuid4().hex}.wav"
     try:
         # 1. FFmpeg ile sesi çıkar (WAV)
+        print(f"🎬 [FFMPEG] Yol: {FFMPEG_BIN}") 
         cmd = [
-            "ffmpeg", "-y",
+            FFMPEG_BIN, "-y",
             "-i", video_path,
             "-ac", "1",
             "-ar", "16000",
