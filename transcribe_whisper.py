@@ -49,8 +49,14 @@ def transcribe_audio(video_path, model=None):
     """
     wav_path = f"_audio_{uuid.uuid4().hex}.wav"
     try:
+        if not os.path.exists(video_path):
+            print(f"❌ [HATA] Video dosyası bulunamadı: {video_path}")
+            return ""
+
         # 1. FFmpeg ile sesi çıkar (WAV)
-        print(f"🎬 [FFMPEG] Yol: {FFMPEG_BIN}") 
+        print(f"🎬 [FFMPEG] Kullanılan Exe: {FFMPEG_BIN}")
+        print(f"🎬 [FFMPEG] Video Kaynağı: {video_path}")
+        
         cmd = [
             FFMPEG_BIN, "-y",
             "-i", video_path,
@@ -59,13 +65,22 @@ def transcribe_audio(video_path, model=None):
             "-vn",
             wav_path
         ]
-        # Hata bastırmadan çalıştır (Hataları görmek için stderr=None)
-        print(f"🎬 [FFMPEG] Sesi ayıklıyor: {wav_path}")
-        subprocess.run(cmd, stdout=None, stderr=None, check=True)
+        
+        # FFmpeg çalıştır (çıktıyı yakala)
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        if result.returncode != 0:
+            print(f"❌ [FFMPEG HATASI] Return Code: {result.returncode}")
+            print(f"⬇️ STDERR:\n{result.stderr}")
+            return ""
+            
+        print(f"✅ [FFMPEG] Ses ayrıştırıldı: {wav_path}")
 
         # 2. Modeli hazırla
         if model is None:
-            model = get_model()
+            print("⏳ [WHISPER] Model yükleniyor (ilk kez)...")
+            model = get_model() # Bu zaten load_model yapıyor
+
 
         # 3. Transkript al
         result = model.transcribe(wav_path, fp16=False)
