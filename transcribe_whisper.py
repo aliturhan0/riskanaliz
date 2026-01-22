@@ -51,8 +51,9 @@ def transcribe_audio(video_path, model=None):
             "-vn",
             wav_path
         ]
-        # Hata bastırmak için stderr=DEVNULL
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        # Hata bastırmadan çalıştır (Hataları görmek için stderr=None)
+        print(f"🎬 [FFMPEG] Sesi ayıklıyor: {wav_path}")
+        subprocess.run(cmd, stdout=None, stderr=None, check=True)
 
         # 2. Modeli hazırla
         if model is None:
