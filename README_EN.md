@@ -55,4 +55,17 @@ Choose the guide for your operating system:
 6. **AI Interpretation:** Select the CSV file and click the **"🚀 NotebookLM"** button. Have the AI interpret your analysis report using the auto-generated prompt.
 
 ---
+
+## 📖 References and Resources
+
+This project was developed inspired by the following academic research and datasets:
+
+| Resource | Description | Link |
+|----------|-------------|------|
+| 📄 **IEEE Paper** | The academic research paper that inspired this project | [IEEE Xplore](https://ieeexplore.ieee.org/document/9591887) |
+| 📊 **Kaggle Dataset** | The "Suicide Watch" dataset used in the research | [Kaggle Dataset](https://www.kaggle.com/datasets/nikhileswarkomati/suicide-watch) |
+| 📂 **Dataset Files** | All dataset files used for training | [Google Drive](https://drive.google.com/drive/folders/1JugPur8Axd7OG874V9MitWIIiatp_OSW?usp=sharing) |
+
+---
+
 **Disclaimer:** This tool is for educational and research purposes only. Please comply with TikTok's terms of service.

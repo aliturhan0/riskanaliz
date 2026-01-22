@@ -4,7 +4,7 @@
 
 ---
 
-**TikTok Risk Analizörü**, TikTok videolarını hashtag veya kullanıcı bazlı tarayan, indiren, metin/ses/görsel analizi yapan ve **Yapay Zeka (BERT)** ile risk skoru hesaplayan kapsamlı bir araçtır.
+**TikTok Risk Analizörü**, TikTok videolarını hashtag veya kullanıcı bazlı tarayan, derinlemesine analiz eden profesyonel bir veri istihbarat aracıdır.
 
 ## 🚀 Özellikler
 
@@ -53,4 +53,17 @@
 6. **Yapay Zeka Yorumu:** Oluşan CSV dosyasını seçip **"🚀 NotebookLM"** butonuna basın. Otomatik oluşturulan prompt ile analiz raporunuzu yapay zekaya yorumlatın.
 
 ---
+
+## 📖 Referanslar ve Kaynaklar
+
+Bu proje aşağıdaki akademik çalışma ve veri setlerinden esinlenilerek geliştirilmiştir:
+
+| Kaynak | Açıklama | Link |
+|--------|----------|------|
+| 📄 **IEEE Makalesi** | Projemizin temel aldığı akademik araştırma makalesi | [IEEE Xplore](https://ieeexplore.ieee.org/document/9591887) |
+| 📊 **Kaggle Veri Seti** | Makalede kullanılan "Suicide Watch" veri seti | [Kaggle Dataset](https://www.kaggle.com/datasets/nikhileswarkomati/suicide-watch) |
+| 📂 **Veri Seti Dosyaları** | Eğitim için kullanılan tüm veri seti dosyaları | [Google Drive](https://drive.google.com/drive/folders/1JugPur8Axd7OG874V9MitWIIiatp_OSW?usp=sharing) |
+
+---
+
 **Sorumluluk Reddi:** Bu araç sadece eğitim ve araştırma amaçlıdır. TikTok'un kullanım koşullarına uyunuz.
