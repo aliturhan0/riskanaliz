@@ -1,4 +1,4 @@
-# 🕵️‍♂️ TikTok Risk Analyzer & Archiver
+# 🕵️‍♂️ TikTok Risk Intelligence System
 
 **🇬🇧 English Documentation:** [README_EN.md](README_EN.md) | [Windows Guide](docs/WINDOWS_TUTORIAL_EN.md) | [Mac Guide](docs/MAC_TUTORIAL_EN.md)
 
