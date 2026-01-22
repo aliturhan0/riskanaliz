@@ -801,8 +801,9 @@ Lütfen analizi şu başlıklar altında, okunabilir ve profesyonel bir dille su
         if not csv_name.lower().endswith(".csv"):
             csv_name += ".csv"
         
+        # -u flag forces unbuffered stdout for real-time progress
         return [
-            sys.executable, self.script_path,
+            sys.executable, "-u", self.script_path,
             "--mode", mode,
             "--query", query,
             "--limit", str(int(self.limit_var.get())),
@@ -840,6 +841,8 @@ Lütfen analizi şu başlıklar altında, okunabilir ve profesyonel bir dille su
             if sys.platform.startswith("win"):
                 env["PYTHONIOENCODING"] = "utf-8"
                 env["PYTHONUTF8"] = "1"
+            # Force unbuffered output for real-time progress updates
+            env["PYTHONUNBUFFERED"] = "1"
             
             self.proc = subprocess.Popen(
                 cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,

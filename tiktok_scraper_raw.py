@@ -9,6 +9,7 @@ import requests
 import pandas as pd
 import cv2
 import easyocr
+from deep_translator import GoogleTranslator
 from collections import Counter
 from playwright.sync_api import sync_playwright
 
@@ -36,7 +37,17 @@ def _load_risk_model(script_dir: str):
     model_dir = os.path.join(script_dir, MODEL_DIR_NAME)
 
     _device = "cuda" if torch.cuda.is_available() else "cpu"
-    _tokenizer = AutoTokenizer.from_pretrained(model_dir)
+    try:
+        _tokenizer = AutoTokenizer.from_pretrained(
+            model_dir,
+            fix_mistral_regex=True,
+            use_fast=False
+        )
+    except TypeError:
+        _tokenizer = AutoTokenizer.from_pretrained(
+            model_dir,
+            use_fast=False
+        )
     _model = AutoModelForSequenceClassification.from_pretrained(model_dir)
     _model.to(_device)
     _model.eval()
@@ -146,22 +157,71 @@ def _score_texts(
 
 
 def add_risk_columns(df: pd.DataFrame, script_dir: str):
-    # hiçbir şeyi silmez, sadece yeni kolon ekler
+    # hiçbir şeyi silmez, sadece risk kolonlarını üretir
     if df is None or len(df) == 0:
         return df
 
+    # ===============================
+    # TR -> EN ÇEVİRİ (Google)
+    # ===============================
+    _translate_cache = {}
+
+    def translate_if_tr(text: str) -> str:
+        if text is None:
+            return ""
+        s = str(text).strip()
+        if not s:
+            return ""
+
+        # basit Türkçe tespiti
+        tr_chars = "çğıöşüÇĞİÖŞÜ"
+        tr_common = {
+            "ve", "bir", "bu", "şu", "için", "çok",
+            "ama", "de", "da", "ben", "sen", "biz",
+            "siz", "mi", "mı", "mu", "mü"
+        }
+
+        is_tr = any(c in tr_chars for c in s)
+        if not is_tr:
+            tokens = re.findall(r"[A-Za-zÇĞİÖŞÜçğıöşü]+", s.lower())
+            hit = sum(1 for t in tokens if t in tr_common)
+            is_tr = hit >= 2
+
+        if not is_tr:
+            return s
+
+        if s in _translate_cache:
+            return _translate_cache[s]
+
+        try:
+            en = GoogleTranslator(source="tr", target="en").translate(s)
+            en = (en or "").strip()
+            if not en:
+                en = s
+            _translate_cache[s] = en
+            return en
+        except Exception:
+            _translate_cache[s] = s
+            return s
+
+    # ===============================
+    # RISK HESAPLAMA (çeviri uygulanmış metinler)
+    # ===============================
     if "caption_raw" in df.columns:
-        df["caption_risk"] = _score_texts(df["caption_raw"].tolist(), script_dir)
+        caption_for_model = df["caption_raw"].apply(translate_if_tr).tolist()
+        df["caption_risk"] = _score_texts(caption_for_model, script_dir)
     else:
         df["caption_risk"] = None
 
     if "overlay_text_raw" in df.columns:
-        df["overlay_risk"] = _score_texts(df["overlay_text_raw"].tolist(), script_dir)
+        overlay_for_model = df["overlay_text_raw"].apply(translate_if_tr).tolist()
+        df["overlay_risk"] = _score_texts(overlay_for_model, script_dir)
     else:
         df["overlay_risk"] = None
 
     if "transcript_raw" in df.columns:
-        df["transcript_risk"] = _score_texts(df["transcript_raw"].tolist(), script_dir)
+        transcript_for_model = df["transcript_raw"].apply(translate_if_tr).tolist()
+        df["transcript_risk"] = _score_texts(transcript_for_model, script_dir)
     else:
         df["transcript_risk"] = None
 
@@ -336,33 +396,33 @@ def get_caption(page):
 # TEK VİDEO İŞLE (HAM)
 # ======================================================
 def process_video(page, source_type, source_value, url, script_dir):
-    print(f"  📥 Video sayfası yükleniyor...")
+    print(f"  📥 Video sayfası yükleniyor...", flush=True)
     page.goto(url, timeout=60000)
     time.sleep(2)
 
-    print(f"  📝 Caption alınıyor...")
+    print(f"  📝 Caption alınıyor...", flush=True)
     caption_raw = get_caption(page)
 
-    print(f"  ⬇️ Video indiriliyor...")
+    print(f"  ⬇️ Video indiriliyor...", flush=True)
     video_file = os.path.join(script_dir, f"v_{uuid.uuid4().hex}.mp4")
     video_path = download_video(url, video_file)
 
-    print(f"  🎤 Ses transkripti çıkarılıyor...")
+    print(f"  🎤 Ses transkripti çıkarılıyor...", flush=True)
     transcript_raw = extract_transcript(video_path, script_dir)
     
-    print(f"  🔤 OCR metin taranıyor...")
+    print(f"  🔤 OCR metin taranıyor...", flush=True)
     overlay_raw = extract_overlay_text(video_path)
 
-    print(f"  👤 Yüz analizi yapılıyor...")
+    print(f"  👤 Yüz analizi yapılıyor...", flush=True)
     face_info = extract_face_features(video_path)
     
-    print(f"  🎨 Görsel analiz yapılıyor...")
+    print(f"  🎨 Görsel analiz yapılıyor...", flush=True)
     visual_info = extract_visual_features(video_path)
 
     if video_path and os.path.exists(video_path):
         os.remove(video_path)
 
-    print(f"  ✅ Video işlendi!")
+    print(f"  ✅ Video işlendi!", flush=True)
     
     return {
         "source_type": source_type,
@@ -392,7 +452,7 @@ def wait_for_tiktok_ready(page, timeout=180):
     TikTok doğrulama / captcha geçilene kadar bekler.
     Terminal input() YOK.
     """
-    print("⏳ TikTok doğrulama kontrol ediliyor...")
+    print("⏳ TikTok doğrulama kontrol ediliyor...", flush=True)
 
     start = time.time()
     while time.time() - start < timeout:
@@ -407,7 +467,7 @@ def wait_for_tiktok_ready(page, timeout=180):
             # Sayfada video linkleri gelmiş mi?
             links = page.locator("a[href*='/video/']").count()
             if links > 0:
-                print("✅ Doğrulama geçildi, devam ediliyor.")
+                print("✅ Doğrulama geçildi, devam ediliyor.", flush=True)
                 return True
 
         except:
@@ -415,7 +475,7 @@ def wait_for_tiktok_ready(page, timeout=180):
 
         time.sleep(1)
 
-    print("⚠️ Doğrulama bekleme süresi doldu, devam ediliyor.")
+    print("⚠️ Doğrulama bekleme süresi doldu, devam ediliyor.", flush=True)
     return False
 
 
@@ -441,8 +501,9 @@ def scrape_hashtag(tag, limit, script_dir, headless=0):
         time.sleep(2)
 
         links = collect_links(page, limit)
+        print(f"🔗 {len(links)} video linki bulundu, işleme başlanıyor...", flush=True)
         for i, v in enumerate(links, 1):
-            print(f"[{i}/{len(links)}] {v}")
+            print(f"[{i}/{len(links)}] {v}", flush=True)
             rows.append(process_video(page, "hashtag", tag, v, script_dir))
 
         browser.close()
@@ -469,8 +530,9 @@ def scrape_user(username, limit, script_dir, headless=0):
         time.sleep(2)
 
         links = collect_links(page, limit)
+        print(f"🔗 {len(links)} video linki bulundu, işleme başlanıyor...", flush=True)
         for i, v in enumerate(links, 1):
-            print(f"[{i}/{len(links)}] {v}")
+            print(f"[{i}/{len(links)}] {v}", flush=True)
             rows.append(process_video(page, "user", username, v, script_dir))
 
         browser.close()
@@ -482,7 +544,7 @@ def scrape_user(username, limit, script_dir, headless=0):
 # ======================================================
 def append_csv(csv_path, df):
     if df is None or len(df) == 0:
-        print("ℹ️ Yeni veri yok.")
+        print("ℹ️ Yeni veri yok.", flush=True)
         return
 
     # Klasör yoksa oluştur
@@ -497,10 +559,10 @@ def append_csv(csv_path, df):
             existing = set(old_df["video_url"].astype(str))
             before = len(df)
             df = df[~df["video_url"].astype(str).isin(existing)]
-            print(f"🧹 Duplicate silindi: {before - len(df)}")
+            print(f"🧹 Duplicate silindi: {before - len(df)}", flush=True)
 
         if len(df) == 0:
-            print("ℹ️ Tüm videolar daha önce kayıtlı.")
+            print("ℹ️ Tüm videolar daha önce kayıtlı.", flush=True)
             return
 
         for col in old_df.columns:
@@ -509,10 +571,10 @@ def append_csv(csv_path, df):
         df = df[old_df.columns]
 
         df.to_csv(csv_path, mode="a", header=False, index=False, encoding="utf-8-sig")
-        print(f"✅ {len(df)} yeni satır eklendi.")
+        print(f"✅ {len(df)} yeni satır eklendi.", flush=True)
     else:
         df.to_csv(csv_path, index=False, encoding="utf-8-sig")
-        print(f"🆕 CSV oluşturuldu ({len(df)} satır).")
+        print(f"🆕 CSV oluşturuldu ({len(df)} satır).", flush=True)
 
 # ======================================================
 # MAIN
@@ -571,12 +633,12 @@ if __name__ == "__main__":
         )
 
     if df is None or len(df) == 0:
-        print("⚠️ Veri bulunamadı, işlem sonlandırıldı.")
+        print("⚠️ Veri bulunamadı, işlem sonlandırıldı.", flush=True)
         exit(0)
 
     # Ham CSV her zaman append edilir (data/csv klasörüne)
     append_csv(csv_path, df)
-    print("✅ HAM VERİ TOPLAMA TAMAMLANDI")
+    print("✅ HAM VERİ TOPLAMA TAMAMLANDI", flush=True)
 
     # ---------------- ANALYZE ----------------
     if args.analyze == 1:
@@ -591,14 +653,14 @@ if __name__ == "__main__":
         if analyzed_dir and not os.path.exists(analyzed_dir):
             os.makedirs(analyzed_dir, exist_ok=True)
 
-        print("🔎 Risk analizi (yalnızca bu çalıştırma) başlıyor...")
+        print("🔎 Risk analizi (yalnızca bu çalıştırma) başlıyor...", flush=True)
         df = add_risk_columns(df, script_dir)
-        print("✅ Risk analizi bitti.")
+        print("✅ Risk analizi bitti.", flush=True)
 
         # OVERWRITE: aynı isimde dosya varsa üstüne yazar
         df.to_csv(analyzed_path, index=False, encoding="utf-8-sig")
         print(
-            f"✅ ANALYZED CSV oluşturuldu: {analyzed_path} (satır: {len(df)})"
+            f"✅ ANALYZED CSV oluşturuldu: {analyzed_path} (satır: {len(df)})", flush=True
         )
     else:
-        print("ℹ️ Analyze kapalı, analyzed CSV üretilmedi.")
+        print("ℹ️ Analyze kapalı, analyzed CSV üretilmedi.", flush=True)

@@ -71,7 +71,7 @@ Terminalde şu komutları sırasıyla çalıştırın:
 
     **Manuel Yükleme Komutu:**
     ```powershell
-    pip install requests pandas opencv-python easyocr playwright torch transformers openai-whisper ffmpeg-python certifi
+    pip install requests pandas opencv-python easyocr playwright torch transformers openai-whisper ffmpeg-python certifi deep-translator imageio-ffmpeg sentencepiece
     python -m playwright install chromium
     ```
 

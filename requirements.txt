@@ -9,3 +9,6 @@ openai-whisper
 ffmpeg-python
 certifi
 tk
+deep-translator
+imageio-ffmpeg
+sentencepiece

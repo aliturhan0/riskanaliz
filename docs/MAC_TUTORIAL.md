@@ -54,7 +54,7 @@ Bu proje Yapay Zeka modeli kullanmaktadır. GitHub'a sığmadığı için aşağ
 
 3.  **Kütüphaneleri Yükleme:**
     ```bash
-    pip install requests pandas opencv-python easyocr playwright torch transformers openai-whisper ffmpeg-python certifi
+    pip install requests pandas opencv-python easyocr playwright torch transformers openai-whisper ffmpeg-python certifi deep-translator imageio-ffmpeg sentencepiece
     python -m playwright install chromium
     ```
 
