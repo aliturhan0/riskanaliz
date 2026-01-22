@@ -16,8 +16,11 @@ my_suicide_bert_model/
 tiktok_raw_data.csv
 tiktok_analyzed.csv
 
-# Data klasörü çıktıları
-data/csv/*.csv
-data/notebooklm_txt/*.txt
+# Data klasörü çıktıları (İçerikleri yok say, klasör yapısını koru)
+data/csv/*
+!data/csv/.gitkeep
+data/notebooklm_txt/*
+!data/notebooklm_txt/.gitkeep
+
 *.mp4
 *.wav
